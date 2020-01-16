@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "strictNullChecks": false,
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
@@ -17,6 +18,21 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@asset/*": [
+        "src/assets/*"
+      ],
+      "@component/*": [
+        "src/components/*"
+      ],
+      "@interface/*": [
+        "src/interfaces/*"
+      ],
+      "@lib/*": [
+        "src/libs/*"
+      ],
+      "@style/*": [
+        "src/styles/*"
       ]
     },
     "lib": [

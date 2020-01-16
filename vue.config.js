@@ -12,7 +12,7 @@ module.exports = {
             .set('@page', resolve('src/views'))
             .set('@component', resolve('src/components'))
             .set('@interface', resolve('src/interfaces'))
-            .set('@lib', resolve('src/libs'))
+            .set('@utils', resolve('src/utils'))
             .set('@file', resolve('src/assets/files'))
             .set('@image', resolve('src/assets/images'))
             .set('@style', resolve('src/assets/styles'))
