@@ -1,13 +1,11 @@
 interface Api_cfg {
     url: string
     method: "GET" | "POST"
-    data?: {
-        [propName: string]: any
-    }
+    data?: any
     headers?: {
         [propName: string]: any
     }
     [propName: string]: any
 }
 
-export { Api_cfg }
+export default Api_cfg

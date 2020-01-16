@@ -19,8 +19,8 @@
       "@/*": [
         "src/*"
       ],
-      "@asset/*": [
-        "src/assets/*"
+      "@page/*": [
+        "src/views/*"
       ],
       "@component/*": [
         "src/components/*"
@@ -28,8 +28,14 @@
       "@interface/*": [
         "src/interfaces/*"
       ],
-      "@lib/*": [
-        "src/libs/*"
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@file/*": [
+        "src/files/*"
+      ],
+      "@image/*": [
+        "src/images/*"
       ],
       "@style/*": [
         "src/styles/*"
