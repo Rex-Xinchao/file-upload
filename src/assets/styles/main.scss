@@ -6,3 +6,33 @@
   color: #2c3e50;
   margin-top: 60px;
 }
+
+input {
+  outline: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+button {
+  background-color: white;
+  border: 1px solid #cccccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin: 0 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+button.active {
+  background-color: $color-primary;
+  color: white;
+}

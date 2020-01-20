@@ -10,6 +10,9 @@ server.on("request", (req, res) => {
         res.end();
         return;
     }
+    res.status = 200;
+    res.end();
+    return;
 })
 
 server.listen(3000, () => console.log("server on 3000"))

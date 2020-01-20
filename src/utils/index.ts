@@ -1,13 +1,11 @@
 import Api_cfg from '@interface/Api_cfg';
 
-const $api = (cfg: Api_cfg) => {
+const $api = (url: string, method: string = 'POST', data: any = {}) => {
     return new Promise(resolve => {
         const xhr = new XMLHttpRequest();
-        xhr.open(cfg.method, cfg.url);
-        Object.keys(cfg.headers).forEach(key =>
-            xhr.setRequestHeader(key, cfg.headers[key])
-        );
-        xhr.send(cfg.data);
+        xhr.open(method, url);
+        xhr.setRequestHeader("content-type", "application/json")
+        xhr.send(data);
         xhr.onload = (e: any) => {
             resolve({
                 data: e.target.response
@@ -16,4 +14,17 @@ const $api = (cfg: Api_cfg) => {
     });
 }
 
-export { $api }
+const $postFile = (url: string, method: string = 'POST', data: any = {}) => {
+    return new Promise(resolve => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.send(data);
+        xhr.onload = (e: any) => {
+            resolve({
+                data: e.target.response
+            });
+        };
+    });
+}
+
+export { $api, $postFile }

@@ -12,3 +12,16 @@ li {
 a {
   color: #42b983;
 }
+
+.main-container{
+  width: 80%;
+  margin: 0 auto;
+
+  .operation-container{
+    width: 100%;
+  }
+
+  .progress-container{
+    margin-top: 20px;
+  }
+}
