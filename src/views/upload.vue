@@ -7,8 +7,7 @@
         <button class="upload-pause" @click="uploadPause">暂停</button>
       </div>
       <div class="progress-container">
-        <p>计算文件hash：{{`${progress.hash}%`}}</p>
-        <p>总进度：{{`${progress.sum}%`}}</p>
+        <p>总进度：{{`${sum}%`}}</p>
         <p
           v-for="(item, index) in uploadList"
           :key="index"
@@ -23,20 +22,23 @@ import { $api, $postFile } from "@utils/index";
 import { createFileChunk } from "@utils/chunk";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-interface Progress {
-  [propName: string]: number;
-}
-
 @Component
 export default class Upload extends Vue {
-  progress: Progress = {
-    hash: 0,
-    sum: 0
-  };
   file: any = null;
-  chunkSize: number = null;
+  chunkSize: number = null; // 切片单位大小
   fileChunkList: any[] = [];
   uploadList: any[] = [];
+
+  get sum(): number {
+    // 计算属性的get
+    if (!this.file || !this.uploadList.length) {
+      return 0;
+    }
+    const loaded = this.uploadList
+      .map(item => item.chunk.size * item.percentage)
+      .reduce((acc, cur) => acc + cur);
+    return parseInt((loaded / this.file.size).toFixed(2));
+  }
 
   onFileUpload(e: any) {
     const [file] = e.target.files;
@@ -49,8 +51,8 @@ export default class Upload extends Vue {
     this.chunkSize = chunkSize;
     this.uploadList = this.fileChunkList.map(({ file }, index: number) => ({
       chunk: file,
-      index,
       hash: `${this.file.name}-${index}`,
+      index,
       percentage: 0
     }));
     await this.uploadChunks();
@@ -82,12 +84,12 @@ export default class Upload extends Vue {
       JSON.stringify({ filename: this.file.name, size: this.chunkSize })
     );
   }
-  uploadPause() {}
   createProgressHandler(item: any) {
     return (e: any) => {
       item.percentage = parseInt(String((e.loaded / e.total) * 100));
     };
   }
+  uploadPause() {}
   mounted() {}
 }
 </script>
