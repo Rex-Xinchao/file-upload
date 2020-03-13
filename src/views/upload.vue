@@ -7,14 +7,12 @@
         <button class="upload-pause" @click="uploadPause">暂停</button>
       </div>
       <div class="progress-container">
-        <ul>
-          <li>计算文件hash：{{`${progress.hash}%`}}</li>
-          <li>总进度：{{`${progress.sum}%`}}</li>
-          <li
-            v-for="(item, index) in uploadList"
-            :key="index"
-          >{{`${item.name}：）${item.size}（KB） ${item.progress}%`}}</li>
-        </ul>
+        <p>计算文件hash：{{`${progress.hash}%`}}</p>
+        <p>总进度：{{`${progress.sum}%`}}</p>
+        <p
+          v-for="(item, index) in uploadList"
+          :key="index"
+        >{{`${item.name}：${item.size}（KB） ${item.progress}%`}}</p>
       </div>
     </div>
   </div>
@@ -36,6 +34,7 @@ export default class Upload extends Vue {
     sum: 0
   };
   file: any = null;
+  chunkSize: number = null;
   fileChunkList: any[] = [];
   uploadList: any[] = [];
 
@@ -45,9 +44,11 @@ export default class Upload extends Vue {
     this.file = file;
   }
   async uploadStart() {
-    this.fileChunkList = createFileChunk(this.file);
+    let {fileChunkList, chunkSize} = createFileChunk(this.file);
+    this.fileChunkList = fileChunkList
+    this.chunkSize = chunkSize
     this.uploadList = this.fileChunkList.map(({ file }, index: number) => ({
-      chuck: file,
+      chunk: file,
       hash: `${this.file.name}-${index}`
     }));
     await this.uploadChunks();
@@ -63,6 +64,10 @@ export default class Upload extends Vue {
       })
       .map(async ({ formData }) => $postFile("/api/upload", "POST", formData));
     await Promise.all(requestList);
+    await this.mergeRequest();
+  }
+  mergeRequest() {
+    $api("/api/merge", "POST", JSON.stringify({ filename: this.file.name, size: this.chunkSize }));
   }
   uploadPause() {}
   mounted() {}

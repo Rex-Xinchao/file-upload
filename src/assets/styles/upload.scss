@@ -13,15 +13,20 @@ a {
   color: #42b983;
 }
 
-.main-container{
+.main-container {
   width: 80%;
   margin: 0 auto;
 
-  .operation-container{
+  .operation-container {
     width: 100%;
   }
 
-  .progress-container{
+  .progress-container {
     margin-top: 20px;
+
+    p {
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
   }
 }

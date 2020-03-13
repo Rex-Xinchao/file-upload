@@ -8,7 +8,7 @@ const createFileChunk = (file: any, length: number = LENGTH) => {
         fileChunkList.push({ file: file.slice(chunkSum, chunkSum + chunkSize) })
         chunkSum += chunkSize
     }
-    return fileChunkList
+    return { fileChunkList, chunkSize }
 }
 
 export { createFileChunk }
