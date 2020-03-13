@@ -14,9 +14,10 @@ const $api = (url: string, method: string = 'POST', data: any = {}) => {
     });
 }
 
-const $postFile = (url: string, method: string = 'POST', data: any = {}) => {
+const $postFile = (url: string, method: string = 'POST', onProgress = (e: any) => e, data: any = {}) => {
     return new Promise(resolve => {
         const xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = onProgress;
         xhr.open(method, url);
         xhr.send(data);
         xhr.onload = (e: any) => {

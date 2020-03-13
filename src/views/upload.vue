@@ -12,7 +12,7 @@
         <p
           v-for="(item, index) in uploadList"
           :key="index"
-        >{{`${item.name}：${item.size}（KB） ${item.progress}%`}}</p>
+        >{{`${item.hash}：${(item.chunk.size / 1000).toFixed(1)}（KB） ${item.percentage}%`}}</p>
       </div>
     </div>
   </div>
@@ -44,32 +44,50 @@ export default class Upload extends Vue {
     this.file = file;
   }
   async uploadStart() {
-    let {fileChunkList, chunkSize} = createFileChunk(this.file);
-    this.fileChunkList = fileChunkList
-    this.chunkSize = chunkSize
+    let { fileChunkList, chunkSize } = createFileChunk(this.file);
+    this.fileChunkList = fileChunkList;
+    this.chunkSize = chunkSize;
     this.uploadList = this.fileChunkList.map(({ file }, index: number) => ({
       chunk: file,
-      hash: `${this.file.name}-${index}`
+      index,
+      hash: `${this.file.name}-${index}`,
+      percentage: 0
     }));
     await this.uploadChunks();
   }
   async uploadChunks() {
     const requestList = this.uploadList
-      .map(({ chunk, hash }) => {
+      .map(({ chunk, hash, index }) => {
         const formData = new FormData();
         formData.append("chunk", chunk);
         formData.append("hash", hash);
         formData.append("filename", this.file.name);
-        return { formData };
+        return { formData, index };
       })
-      .map(async ({ formData }) => $postFile("/api/upload", "POST", formData));
+      .map(async ({ formData, index }) =>
+        $postFile(
+          "/api/upload",
+          "POST",
+          this.createProgressHandler(this.uploadList[index]),
+          formData
+        )
+      );
     await Promise.all(requestList);
     await this.mergeRequest();
   }
   mergeRequest() {
-    $api("/api/merge", "POST", JSON.stringify({ filename: this.file.name, size: this.chunkSize }));
+    $api(
+      "/api/merge",
+      "POST",
+      JSON.stringify({ filename: this.file.name, size: this.chunkSize })
+    );
   }
   uploadPause() {}
+  createProgressHandler(item: any) {
+    return (e: any) => {
+      item.percentage = parseInt(String((e.loaded / e.total) * 100));
+    };
+  }
   mounted() {}
 }
 </script>
